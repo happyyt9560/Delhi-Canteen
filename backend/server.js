@@ -1,0 +1,16 @@
+require('dotenv').config();
+const express=require('express'),cors=require('cors'),morgan=require('morgan'),mongoose=require('mongoose'),{connect}=require('./models/database');
+
+// Express 4 does not forward rejected promises from async route handlers. Wrap
+// them so transient database failures are returned to the caller, not thrown as
+// unhandled rejections that stop the Node process.
+function wrapAsyncHandlers(router){for(const layer of router.stack||[]){if(layer.route){for(const routeLayer of layer.route.stack||[]){const handler=routeLayer.handle;if(handler.constructor.name==='AsyncFunction')routeLayer.handle=(req,res,next)=>Promise.resolve(handler(req,res,next)).catch(next)}}else if(layer.name==='router')wrapAsyncHandlers(layer.handle)}return router}
+const routes={auth:wrapAsyncHandlers(require('./routes/authRoutes')),admin:wrapAsyncHandlers(require('./routes/adminRoutes')),customer:wrapAsyncHandlers(require('./routes/customerRoutes')),delivery:wrapAsyncHandlers(require('./routes/deliveryRoutes')),products:wrapAsyncHandlers(require('./routes/productRoutes')),categories:wrapAsyncHandlers(require('./routes/categoryRoutes')),orders:wrapAsyncHandlers(require('./routes/orderRoutes')),bills:wrapAsyncHandlers(require('./routes/billRoutes'))};
+const app=express();app.use(cors());app.use(express.json({limit:'5mb'}));app.use(morgan('dev'));app.get('/api/health',(req,res)=>res.json({success:true,message:'Delhi Canteen API is running',database:mongoose.connection.readyState===1?'connected':'unavailable'}));app.use('/api',(req,res,next)=>{if(mongoose.connection.readyState!==1)return res.status(503).json({success:false,message:'Database connection is temporarily unavailable. Please try again shortly.'});next()});app.use('/api/auth',routes.auth);app.use('/api/admin',routes.admin);app.use('/api/customer',routes.customer);app.use('/api/delivery',routes.delivery);app.use('/api/products',routes.products);app.use('/api/categories',routes.categories);app.use('/api/orders',routes.orders);app.use('/api/bills',routes.bills);app.use((req,res)=>res.status(404).json({success:false,message:'Route not found'}));app.use((err,req,res,next)=>{console.error(err);res.status(err.status||500).json({success:false,message:err.message||'Internal server error'})});
+mongoose.connection.on('error',error=>console.error(`MongoDB connection error: ${error.message}`));mongoose.connection.on('disconnected',()=>console.warn('MongoDB disconnected; requests will return 503 until it reconnects.'));mongoose.connection.on('reconnected',()=>console.log('MongoDB reconnected'));
+const port=process.env.PORT||5000;
+const retryDelayMs=30000;
+let serverStarted=false,retryTimer;
+function startServer(){if(serverStarted)return;serverStarted=true;const server=app.listen(port,()=>console.log(`API running on http://localhost:${port}`));server.on('error',error=>{serverStarted=false;console.error(`API server failed to start: ${error.message}`)})}
+async function connectDatabase(){if(mongoose.connection.readyState===1)return;try{await connect();clearTimeout(retryTimer)}catch(error){console.error(`MongoDB connection failed: ${error.message}`);startServer();console.log(`Retrying MongoDB connection in ${retryDelayMs/1000} seconds...`);clearTimeout(retryTimer);retryTimer=setTimeout(connectDatabase,retryDelayMs)}}
+connectDatabase().then(startServer);

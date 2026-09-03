@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Login | Delhi Canteen</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="auth-page">
+    <main class="auth-shell">
+        <aside class="auth-art"><a class="brand" href="index.html"><span>Delhi</span> Canteen<small>daily essentials,
+                    delivered</small></a>
+            <div>
+                <p class="eyebrow">GOOD FOOD, GOOD MOOD</p>
+                <h1>Freshness is<br>just a click away.</h1>
+                <p>Sign in to make your grocery run simpler.</p>
+            </div>
+        </aside>
+        <section class="auth-card">
+            <a class="auth-brand brand" href="index.html"><span>Delhi</span> Canteen<small>daily essentials,
+                    delivered</small></a>
+            <div id="login-view">
+                <p class="eyebrow">WELCOME</p>
+                <h1>Login your account</h1>
+                <form id="auth-form" novalidate><label>Email address<input type="email" name="email" required
+                            placeholder="Enter your Email"></label><label>Password <button class="show-pass"
+                            type="button" data-password-toggle>Show</button><input id="password" type="password"
+                            name="password" required minlength="6" placeholder="At least 6 characters"></label>
+                    <div class="form-row"><label class="check"><input type="checkbox" name="remember"> Remember
+                            me</label><a href="#"
+                            onclick="toast('Password reset link sent (demo).');return false">Forgot password?</a></div>
+                    <button class="primary wide" type="submit">Login &rarr;</button>
+                </form>
+                <p class="auth-switch">New to Delhi Canteen? <button onclick="toggleAuth(true)">Create account</button>
+                </p>
+            </div>
+            <div id="signup-view" hidden>
+                <p class="eyebrow">JOIN OUR FAMILY</p>
+                <h1>Create your account</h1>
+                <form id="signup-form"><label>Full name<input name="name" required autocomplete="name"
+                            placeholder="Your name"></label><label>Email address<input type="email" name="email"
+                            required autocomplete="email" placeholder="Enter your Email"></label><label>Phone
+                        number<input type="tel" name="phone" required pattern="[0-9]{10}" inputmode="numeric"
+                            autocomplete="tel" placeholder="10-digit mobile number"></label><label>Password
+                        <button class="show-pass" type="button" data-password-toggle>Show</button><input
+                            id="signup-password" type="password" name="password" required minlength="6"
+                        autocomplete="new-password" placeholder="At least 6 characters"></label><button
+                        class="primary wide" type="submit">Create account
+                        &rarr;</button></form>
+                <p class="auth-switch">Already have an account? <button onclick="toggleAuth(false)">Login</button></p>
+            </div>
+        </section>
+    </main>
+    <script src="js/app.js"></script>
+    <script src="js/api.js?v=10"></script>
+</body>
+
+</html>

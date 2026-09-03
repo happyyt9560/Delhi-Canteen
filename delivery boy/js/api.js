@@ -1,0 +1,3 @@
+const DELIVERY_API_URL='http://localhost:5000/api';
+async function deliveryApi(path,options={}){const token=localStorage.getItem('deliveryBoyToken');const response=await fetch(`${DELIVERY_API_URL}${path}`,{...options,headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`,...(options.headers||{})}});const data=response.status===204?{}:await response.json().catch(()=>({}));if(response.status===401){logout();throw new Error('Your session has expired. Please log in again.')}if(!response.ok)throw new Error(data.message||'Request failed');return data}
+function deliveryMoney(value){return '₹'+Number(value||0).toLocaleString('en-IN')}

@@ -1,0 +1,14 @@
+const router=require('express').Router(),c=require('../controllers/adminController'),customerAdmin=require('../controllers/customerAdminController'),{protect,allow}=require('../middleware/auth');
+router.use(protect,allow('admin'));
+router.get('/dashboard',c.dashboard);
+router.get('/customers',c.customers);
+router.post('/customers',customerAdmin.createCustomer);
+router.put('/customers/:id',customerAdmin.updateCustomer);
+router.delete('/customers/:id',customerAdmin.deleteCustomer);
+router.get('/delivery-boys',c.deliveryBoys);
+router.post('/delivery-boys',c.createDelivery);
+router.put('/delivery-boys/:id',c.updateDelivery);
+router.delete('/delivery-boys/:id',c.deleteDelivery);
+router.patch('/orders/:id/assign',c.assign);
+router.patch('/orders/:id/unassign',c.unassign);
+module.exports=router;

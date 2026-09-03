@@ -1,0 +1,1 @@
+const router=require('express').Router(),c=require('../controllers/customerController'),{protect,allow}=require('../middleware/auth');router.use(protect,allow('customer'));router.get('/profile',c.profile);router.put('/profile',c.updateProfile);router.get('/orders',c.orders);router.get('/orders/:id',c.order);module.exports=router;

@@ -1,0 +1,3 @@
+require('dotenv').config();
+const {connect,Customer,DeliveryBoy,Category,Product,Order}=require('../models/database');
+(async()=>{await connect();const [orders,products,categories,customers,deliveryBoys]=await Promise.all([Order.deleteMany({id:'ORD001'}),Product.deleteMany({id:{$in:['PRD001','PRD002','PRD003']}}),Category.deleteMany({id:{$in:['CAT001','CAT002']}}),Customer.deleteMany({id:'CUS001'}),DeliveryBoy.deleteMany({id:'DB001'})]);console.log(`Deleted ${orders.deletedCount} demo order, ${products.deletedCount} demo products, ${categories.deletedCount} demo categories, and ${customers.deletedCount+deliveryBoys.deletedCount} demo accounts.`);process.exit(0)})().catch(error=>{console.error(error);process.exit(1)});
