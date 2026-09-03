@@ -45,7 +45,7 @@ document.addEventListener('submit', async event => {
     const bookingCharge={type:draft.settings.paymentType,amount:Number(draft.settings.amount),upiId:draft.settings.upiId,payerName:String(values.get('paymentPayerName')||'').trim(),transactionNumber,screenshotName:screenshotFile?.name||'',screenshot,status:'pending',submittedAt:new Date().toISOString()};
     const response=await customerApi('/orders',{method:'POST',body:JSON.stringify({items,paymentMode:draft.order.payment==='Cash on Delivery'?'COD':'Online Payment',address:draft.order.address,bookingCharge,paymentStatus:'pending'})}), saved=response.data;
     store.set('dc_orders',[{...draft.order,id:saved.id,placedAt:saved.createdAt,status:saved.status,paymentStatus:'pending',bookingCharge},...store.get('dc_orders')]);
-    store.set('dc_cart',[]); localStorage.removeItem('dc_coupon'); sessionStorage.removeItem('dc_booking_checkout'); toast('Payment submitted for verification'); setTimeout(()=>location.href='/customer/orders.html',500);
+    store.set('dc_cart',[]); localStorage.removeItem('dc_coupon'); sessionStorage.removeItem('dc_booking_checkout'); toast('Payment submitted for verification'); setTimeout(()=>location.href='orders.html',500);
   } catch(error) { toast(error.message); button.disabled=false; button.textContent='Place order →'; }
 }, true);
 
@@ -57,7 +57,7 @@ function saveCustomerSession(data){
 
 function postLoginDestination(){
   const requested=new URLSearchParams(location.search).get('redirect');
-  return requested==='checkout.html'?'/customer/checkout.html':'/customer/index.html';
+  return requested==='checkout.html'?'checkout.html':'index.html';
 }
 
 function bindCustomerAuthentication(){
@@ -85,7 +85,7 @@ function bindCustomerAuthentication(){
       saveCustomerSession(result);toast('Account created successfully. Please log in.');
       localStorage.removeItem('dc_customer_token');
       localStorage.removeItem('dc_user');
-      setTimeout(()=>location.href='/customer/login.html',500);
+      setTimeout(()=>location.href='login.html',500);
     }catch(error){toast(error.message);button.disabled=false;button.innerHTML='Create account →'}
   };
 }

@@ -751,7 +751,7 @@ function bookingChargeCheckout() {
     const root = $('#booking-charge-page') || $('#online-payment-page');
     if (!root) return;
     const draft = sessionStorage.getItem('dc_booking_checkout');
-    if (!draft) { location.href = '/customer/checkout.html'; return; }
+    if (!draft) { location.href = 'checkout.html'; return; }
     const { order, settings } = JSON.parse(draft);
     root.innerHTML = `<section class="page-heading"><p class="eyebrow">FINAL PAYMENT STEP</p><h1>Booking charge</h1></section><main class="booking-charge-layout"><button class="booking-page-back" type="button" aria-label="Back to checkout">×</button><form id="booking-charge-form" class="checkout-form"><h2>Pay booking charge</h2>${bookingChargeContent(settings)}<button class="primary wide" type="submit">Done & place order →</button></form><aside><h2>Order summary</h2><div class="summary"><p><span>Total Order Value</span><b>${money(order.total)}</b></p><p class="booking-charge-row"><span>Booking Charge Paid</span><b>− ${money(settings.amount)}</b></p><hr><p class="grand"><span>Remaining Cash on Delivery</span><b>${money(Math.max(0, order.total - settings.amount))}</b></p></div></aside></main>`;
     if (settings.paymentType === 'onlinePayment') root.querySelector('.page-heading').remove();
@@ -773,7 +773,7 @@ function bookingChargeCheckout() {
     finalSummary.insertAdjacentHTML('beforeend', '<p class="booking-pending-note">Payment status stays Pending until the admin confirms or rejects it.</p>');
     if (settings.paymentType !== 'onlinePayment') root.querySelector('#booking-charge-form h2').textContent = 'Pay booking charge';
     root.querySelector('#booking-charge-form [type="submit"]').textContent = 'Place order →';
-    $('.booking-page-back', root).onclick = () => history.length > 1 ? history.back() : location.href = '/customer/checkout.html';
+    $('.booking-page-back', root).onclick = () => history.length > 1 ? history.back() : location.href = 'checkout.html';
     $('#booking-charge-form').onsubmit = event => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -781,7 +781,7 @@ function bookingChargeCheckout() {
         const data = new FormData(form), reference = String(data.get('upiTransactionNumber') || '').trim();
         if (!reference) { form.querySelector('[name="upiTransactionNumber"]').focus(); toast('Enter the required UPI transaction/reference number'); return; }
         order.bookingCharge = { amount: Number(settings.amount), upiId: settings.upiId, payerName: String(data.get('paymentPayerName') || '').trim(), transactionNumber: reference, screenshotName: data.get('upiScreenshot')?.name || '', status: 'pending', submittedAt: new Date().toISOString() };
-        const orders = store.get('dc_orders'); orders.unshift(order); store.set('dc_orders', orders); store.set('dc_cart', []); localStorage.removeItem('dc_coupon'); sessionStorage.removeItem('dc_booking_checkout'); toast('Booking payment submitted for verification'); setTimeout(() => location.href = '/customer/orders.html', 500);
+        const orders = store.get('dc_orders'); orders.unshift(order); store.set('dc_orders', orders); store.set('dc_cart', []); localStorage.removeItem('dc_coupon'); sessionStorage.removeItem('dc_booking_checkout'); toast('Booking payment submitted for verification'); setTimeout(() => location.href = 'orders.html', 500);
     };
 }
 document.addEventListener('DOMContentLoaded', bookingChargeCheckout);
