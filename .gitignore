@@ -1,0 +1,9 @@
+# Environment files: keep secrets and local configuration out of Git.
+.env
+.env.*
+!.env.example
+
+# Dependencies and runtime files
+node_modules/
+npm-debug.log*
+*.log
