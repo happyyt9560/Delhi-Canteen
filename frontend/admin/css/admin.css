@@ -2339,7 +2339,42 @@ body:has(.orders-table) .orders-table td:nth-child(2) {
    transform: translateX(18px)
 }
 
+.minimum-order-setting {
+   display: grid;
+   grid-template-columns: auto minmax(180px, 260px);
+   gap: 10px 18px;
+   align-items: end;
+   margin-top: 18px;
+   padding-top: 16px;
+   border-top: 1px solid var(--line)
+}
+
+.minimum-order-setting>label:not(.charge-toggle) {
+   display: grid;
+   gap: 6px;
+   font-weight: 700
+}
+
+.minimum-order-setting input[type="number"] {
+   width: 100%;
+   padding: 10px;
+   border: 1px solid var(--line);
+   border-radius: 8px;
+   background: #fff
+}
+
+.minimum-order-setting small {
+   grid-column: 1 / -1;
+   color: var(--muted)
+}
+
 .admin-dark .charge-setting-grid input[type="number"] {
+   background: #27282f;
+   color: var(--ink);
+   border-color: #4b4c56
+}
+
+.admin-dark .minimum-order-setting input[type="number"] {
    background: #27282f;
    color: var(--ink);
    border-color: #4b4c56
@@ -2363,6 +2398,10 @@ body:has(.orders-table) .orders-table td:nth-child(2) {
 
    .customer-charge-settings .panel-head .primary {
       width: 100%
+   }
+
+   .minimum-order-setting {
+      grid-template-columns: 1fr
    }
 }
 
